@@ -1,0 +1,153 @@
+#==============================
+# Retrieve the 3 documents starting from the one in position 10 and after having sorted it by age and then balance in descending order. 
+#==============================
+
+GET bank/_search
+{
+  "query":{
+    "match_all": {}
+  }, 
+  "from": 10,
+  "size": 3,
+  
+  "sort":{
+    "age": {"order": "desc"}, 
+    "balance": {"order": "desc"}
+  }
+}
+  
+#==============================
+# Retrieve all the documents where the age is 30. 
+#==============================
+GET bank/_search
+{
+  "query":{
+    "match": {"age": 30}
+  }
+}
+
+#==============================
+# Retrieve all the documents where the age is 40 and the state is NOT ID (Idaho).
+#==============================
+
+GET bank/_search
+{
+  "query":{
+    "bool":{
+      "must":[
+        {"match":{"age": 40}}
+        ],
+      "must_not":[
+        {"match":{"state": "ID"}}
+        ]
+      }
+    }
+  }
+  
+  
+#==============================
+# RETRIEVING ALL THE DOCUMENTS WHERE THE BALANCE IS BETWEEN 20000 AND 30000.
+#==============================
+
+GET bank/_search
+{
+  "query":{
+    "bool":{
+      "must":[{ "match_all": {}}],
+      "filter":{
+        "range":{
+            "balance":{
+              "gte": 20000,
+              "lte": 30000
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  
+#==============================
+# RETRIEVING ALL THE DOCUMENTS GROUPED BY STATE.
+#==============================
+
+GET bank/_search
+{
+  "size":0,
+  "aggs":{
+    "group_by_state":{
+      "terms":{
+        "field":"state.keyword"
+      }
+    }
+  }
+}
+
+#==============================
+# RETRIEVING THE AVERAGE BALANCE PER STATE.
+#==============================
+
+GET bank/_search
+{
+  "size":0,
+  "aggs":{
+    "group_by_state":{
+      "terms":{
+        "field": "state.keyword"
+      },
+      "aggs":{
+        "average_balance":{
+          "avg":{
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}
+
+#==============================
+# RETRIEVING ALL THE DOCUMENTS GROUPED BY AGE BUCKET, BY gender AND GET THE balance average.
+#==============================
+
+
+GET bank/_search
+{
+  "size":0,
+  "aggs":{
+    "group_by_age":{
+      "range":{
+        "field": "age", 
+        "ranges":[
+          {
+            "from": 20,
+            "to": 30
+          },
+          {
+            "from":30,
+            "to": 40
+          },
+          {
+            "from": 40,
+            "to": 50
+          }]
+    },
+    "aggs":{
+      "group_by_gender":{
+        "terms":{
+          "field": "gender.keyword"
+        },
+        "aggs":{
+          "average_balance":{
+            "avg":{
+              "field": "balance"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+}
+  
+  
