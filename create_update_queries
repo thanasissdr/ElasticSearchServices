@@ -1,0 +1,29 @@
+# ===========================
+# Insert some twitter data 
+# ===========================
+
+PUT twitter
+{
+  "mappings":{
+    "_doc":{
+      "properties":{
+        "name":{
+          "type": "text"
+        }, 
+        "age":{
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
+
+
+
+POST twitter/_doc/_bulk
+  {"index": {"_id": "1"}}
+  {"name": "Athanasios", "age": 33}
+{"index": {"_id": "2"}}
+{"name": "Panagiotis", "age": 33}
+
+
