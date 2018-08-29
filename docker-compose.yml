@@ -2,6 +2,9 @@ version: "3"
 
 services:
 
+# =======================
+# ELASTICSEARCH
+# =======================
 
   elasticsearch: 
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
@@ -14,6 +17,9 @@ services:
     networks:
       - esnet
 
+# =======================
+# KIBANA
+# =======================
   kibana1:
     image: docker.elastic.co/kibana/kibana:6.4.0
 
@@ -25,6 +31,15 @@ services:
 
     networks:
       - esnet
+
+
+# =======================
+# METRICBEAT
+# =======================
+  
+  metrics:
+      build: ./metricbeat
+    
 
 networks:
   esnet:
